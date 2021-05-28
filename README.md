@@ -28,3 +28,15 @@
   - ASP.Net MVC.
   
 ― Публичная система контроля версий GitHub.
+
+## Подключение базы данных
+В Microsoft Visual Studio Community 2019 через диспетчер пакетов NuGet установить:
+- Microsoft.EntityFrameworkCore.SqlServer;
+- Microsoft.EntityFrameworkCore.Tools;
+- Microsoft.VisualStudio.Web.CodeGeneration.Design
+
+В консоли диспетчера пакетов набрать (Средства -> Диспетер пакетов NuGet -> Консоль диспетчера пакетов)
+``` Nuget
+Add-Migration InitialCreate
+Update-Database
+```
