@@ -6,13 +6,13 @@ namespace ContactList.Models
     public class Contact
     {
         public int Id { get; set; }
-        public string surname { get; set; }
-        public string name { get; set; }
-        public string patronymic { get; set; }
+        public string Surname { get; set; }
+        public string Name { get; set; }
+        public string Patronymic { get; set; }
 
       [DataType(DataType.Date)]
-        public DateTime birthday { get; set; }
-        public string organization { get; set; }
-        public string position { get; set; }
+        public DateTime Birthday { get; set; }
+        public string Organization { get; set; }
+        public string Position { get; set; }
     }
 }
