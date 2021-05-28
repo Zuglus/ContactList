@@ -22,7 +22,7 @@
 одного контакта (один контакт может иметь несколько телефонных номеров).
 
 ## Технологический стек
-― Microsoft SQL Server 20;  
+― Microsoft SQL Server 2019 Developer Edition;  
 ― Microsoft .Net Framework 5.6:
   - Entity Framework;
   - ASP.Net MVC.
