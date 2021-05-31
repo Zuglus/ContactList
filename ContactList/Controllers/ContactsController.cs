@@ -16,12 +16,15 @@ namespace ContactList.Models
         }
 
         // GET: Contacts
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var req = _context
+            var req = await _context
                 .Contact
                 .Include("Phones")
-                .ToList();
+                .Include("Emails")
+                .Include("Skypes")
+                .Include("Others")
+                .ToListAsync();
             return View(req);
         }
 
@@ -34,8 +37,11 @@ namespace ContactList.Models
             }
 
             var contact = await _context
-                .Contact.
-                Include("Phones")
+                .Contact
+                .Include("Phones")
+                .Include("Emails")
+                .Include("Skypes")
+                .Include("Others")
                 .FirstOrDefaultAsync(m => m.ContactId == id);
             if (contact == null)
             {
@@ -56,24 +62,42 @@ namespace ContactList.Models
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string button,
             [Bind("ContactId,Surname,Name,Patronymic,Birthday," +
-            "Organization,Position,Phones")] Contact contact)
+            "Organization,Position,Phones,Emails,Skypes,Others")] Contact contact)
         {
-            if (button == "addPhoneField")
+            switch (button)
             {
-                contact.Phones.Add(new Phone());
-            }
-            else if (button == "delPhoneField")
-            {
-                contact.Phones.Remove(contact.Phones.Last());
-            }
-            else
-            {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(contact);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+                case "addPhoneField":
+                    contact.Phones.Add(new Phone());
+                    break;
+                case "delPhoneField":
+                    contact.Phones.Remove(contact.Phones.Last());
+                    break;
+                case "addEmailField":
+                    contact.Emails.Add(new Email());
+                    break;
+                case "delEmailField":
+                    contact.Emails.Remove(contact.Emails.Last());
+                    break;
+                case "addSkypeField":
+                    contact.Skypes.Add(new Skype());
+                    break;
+                case "delSkypeField":
+                    contact.Skypes.Remove(contact.Skypes.Last());
+                    break;
+                case "addOtherField":
+                    contact.Others.Add(new Other());
+                    break;
+                case "delOtherField":
+                    contact.Others.Remove(contact.Others.Last());
+                    break;
+                default:
+                    if (ModelState.IsValid)
+                    {
+                        _context.Add(contact);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    break;
             }
             return View(contact);
 
@@ -90,6 +114,9 @@ namespace ContactList.Models
             var contact = await _context
                 .Contact
                 .Include("Phones")
+                .Include("Emails")
+                .Include("Skypes")
+                .Include("Others")
                 .FirstOrDefaultAsync(i => i.ContactId == id);
             if (contact == null)
             {
@@ -103,7 +130,7 @@ namespace ContactList.Models
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ContactId," +
             "Surname,Name,Patronymic,Birthday,Organization,Position," +
-            "Phones")] Contact contact)
+            "Phones,Emails,Skypes,Others")] Contact contact)
         {
             if (id != contact.ContactId)
             {

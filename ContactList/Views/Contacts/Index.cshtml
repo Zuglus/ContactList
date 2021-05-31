@@ -18,7 +18,12 @@
             <th>
                 @Html.DisplayNameFor(item => item.FirstOrDefault().Phones)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(item =>item.FirstOrDefault().Emails)
+            </th>
+            <th>
+                @Html.DisplayNameFor(item => item.FirstOrDefault().Skypes)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +34,12 @@
             </td>
             <td>
                 @Html.DisplayFor(i => item.Phones.FirstOrDefault().PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(i => item.Emails.FirstOrDefault().EmailAdress)
+            </td>
+            <td>
+                @Html.DisplayFor(i => item.Skypes.FirstOrDefault().SkypeNumber)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ContactId">Изменить</a> |

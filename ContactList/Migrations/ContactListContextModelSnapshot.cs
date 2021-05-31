@@ -51,6 +51,46 @@ namespace ContactList.Migrations
                     b.ToTable("Contact");
                 });
 
+            modelBuilder.Entity("ContactList.Models.Email", b =>
+                {
+                    b.Property<int?>("EmailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EmailAdress")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("EmailId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("Email");
+                });
+
+            modelBuilder.Entity("ContactList.Models.Other", b =>
+                {
+                    b.Property<int?>("OtherId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("OtherField")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("OtherId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("Other");
+                });
+
             modelBuilder.Entity("ContactList.Models.Phone", b =>
                 {
                     b.Property<int?>("PhoneId")
@@ -71,6 +111,48 @@ namespace ContactList.Migrations
                     b.ToTable("Phone");
                 });
 
+            modelBuilder.Entity("ContactList.Models.Skype", b =>
+                {
+                    b.Property<int?>("SkypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SkypeNumber")
+                        .HasMaxLength(25)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("SkypeId");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("Skype");
+                });
+
+            modelBuilder.Entity("ContactList.Models.Email", b =>
+                {
+                    b.HasOne("ContactList.Models.Contact", "Contact")
+                        .WithMany("Emails")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+                });
+
+            modelBuilder.Entity("ContactList.Models.Other", b =>
+                {
+                    b.HasOne("ContactList.Models.Contact", "Contact")
+                        .WithMany("Others")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+                });
+
             modelBuilder.Entity("ContactList.Models.Phone", b =>
                 {
                     b.HasOne("ContactList.Models.Contact", "Contact")
@@ -82,9 +164,26 @@ namespace ContactList.Migrations
                     b.Navigation("Contact");
                 });
 
+            modelBuilder.Entity("ContactList.Models.Skype", b =>
+                {
+                    b.HasOne("ContactList.Models.Contact", "Contact")
+                        .WithMany("Skypes")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+                });
+
             modelBuilder.Entity("ContactList.Models.Contact", b =>
                 {
+                    b.Navigation("Emails");
+
+                    b.Navigation("Others");
+
                     b.Navigation("Phones");
+
+                    b.Navigation("Skypes");
                 });
 #pragma warning restore 612, 618
         }

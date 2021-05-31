@@ -40,5 +40,9 @@ namespace ContactList.Models
 
         [Display(Name = "Телефоны")]
         public IList<Phone> Phones { get; set; }
+        public IList<Email> Emails { get; set; }
+        public IList<Skype> Skypes { get; set; }
+        public IList<Other> Others { get; set; }
+
     }
 }
