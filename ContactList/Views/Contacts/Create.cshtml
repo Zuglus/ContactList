@@ -1,13 +1,14 @@
-﻿@model ContactList.Models.Contact
+﻿@model Contact
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Создание";
 }
 
-<h1>Create</h1>
+<h1>Создать</h1>
 
-<h4>Contact</h4>
+<h4>Новый контакт</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -42,15 +43,37 @@
                 <input asp-for="Position" class="form-control" />
                 <span asp-validation-for="Position" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            @if (Model == null || Model.Phones.Count == 1)
+            {
+                <div class="form-group">
+                    <label asp-for="Phones[0].PhoneNumber" class="control-label"></label>
+                    <input type="tel" name="Phones[0].PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Phones[0].PhoneNumber" class="text-danger"></span>
+                    <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
+                </div>
+            }
+            else
+            {
+                @for (int i = 0; i < Model.Phones.Count; i++)
+                {
+                    <div class="form-group">
+                        <label asp-for="Phones[i].PhoneNumber" class="control-label"></label>
+                        <input asp-for="Phones[i].PhoneNumber" class="form-control" />
+                        <span asp-validation-for="Phones[i].PhoneNumber" class="text-danger"></span>
+                        <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
+                        <button type="submit" name="button" class="btn-secondary" value="delPhoneField">-</button>
+                    </div>
+                }
+            }
+        <div class="form-group">
+            <button type="submit" name="button" class="btn-primary" value="create">Добавить</button>
+        </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Назад к списку</a>
 </div>
 
 @section Scripts {

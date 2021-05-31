@@ -13,5 +13,5 @@ namespace ContactList.Models
         public string PhoneNumber { get; set; }
 
         public Contact Contact { get; set; }
-    }
+}
 }

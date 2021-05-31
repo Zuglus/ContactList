@@ -1,13 +1,13 @@
 ﻿@model ContactList.Models.Contact
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Подробнее";
 }
 
-<h1>Details</h1>
+<h1>Подробности</h1>
 
 <div>
-    <h4>Contact</h4>
+    <h4>Контакт</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -46,9 +46,18 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Position)
         </dd>
+        @foreach (var phone in Model.Phones)
+        {
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(modelPhone => phone.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(modelPhone => phone.PhoneNumber)
+        </dd>
+        }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.ContactId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

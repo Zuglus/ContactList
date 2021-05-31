@@ -16,12 +16,16 @@ namespace ContactList.Models
         }
 
         // GET: Contacts
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Contact.ToListAsync());
+            var req = _context
+                .Contact
+                .Include("Phones")
+                .ToList();
+            return View(req);
         }
 
-        // GET: Contacts/Details/5
+        // GET: Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -29,8 +33,10 @@ namespace ContactList.Models
                 return NotFound();
             }
 
-            var contact = await _context.Contact
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var contact = await _context
+                .Contact.
+                Include("Phones")
+                .FirstOrDefaultAsync(m => m.ContactId == id);
             if (contact == null)
             {
                 return NotFound();
@@ -39,29 +45,41 @@ namespace ContactList.Models
             return View(contact);
         }
 
-        // GET: Contacts/Create
+        // GET: Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Contacts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Surname,Name,Patronymic,Birthday,Organization,Position")] Contact contact)
+        public async Task<IActionResult> Create(string button,
+            [Bind("ContactId,Surname,Name,Patronymic,Birthday," +
+            "Organization,Position,Phones")] Contact contact)
         {
-            if (ModelState.IsValid)
+            if (button == "addPhoneField")
             {
-                _context.Add(contact);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                contact.Phones.Add(new Phone());
+            }
+            else if (button == "delPhoneField")
+            {
+                contact.Phones.Remove(contact.Phones.Last());
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Add(contact);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(contact);
+
         }
 
-        // GET: Contacts/Edit/5
+        // GET: Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,22 +87,25 @@ namespace ContactList.Models
                 return NotFound();
             }
 
-            var contact = await _context.Contact.FindAsync(id);
+            var contact = await _context
+                .Contact
+                .Include("Phones")
+                .FirstOrDefaultAsync(i => i.ContactId == id);
             if (contact == null)
             {
                 return NotFound();
             }
-            return View(contact);
+            return View("Create", contact);
         }
 
-        // POST: Contacts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Surname,Name,Patronymic,Birthday,Organization,Position")] Contact contact)
+        public async Task<IActionResult> Edit(int id, [Bind("ContactId," +
+            "Surname,Name,Patronymic,Birthday,Organization,Position," +
+            "Phones")] Contact contact)
         {
-            if (id != contact.Id)
+            if (id != contact.ContactId)
             {
                 return NotFound();
             }
@@ -98,7 +119,7 @@ namespace ContactList.Models
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ContactExists(contact.Id))
+                    if (!ContactExists(contact.ContactId))
                     {
                         return NotFound();
                     }
@@ -109,10 +130,12 @@ namespace ContactList.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(contact);
         }
 
-        // GET: Contacts/Delete/5
+
+        // GET: Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -120,8 +143,10 @@ namespace ContactList.Models
                 return NotFound();
             }
 
-            var contact = await _context.Contact
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var contact = await _context
+                .Contact
+                .FirstOrDefaultAsync(m => m.ContactId == id);
+
             if (contact == null)
             {
                 return NotFound();
@@ -130,12 +155,15 @@ namespace ContactList.Models
             return View(contact);
         }
 
-        // POST: Contacts/Delete/5
+        // POST: Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = await _context.Contact.FindAsync(id);
+            var contact = await _context
+                .Contact
+                .FindAsync(id);
+
             _context.Contact.Remove(contact);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -143,7 +171,7 @@ namespace ContactList.Models
 
         private bool ContactExists(int id)
         {
-            return _context.Contact.Any(e => e.Id == id);
+            return _context.Contact.Any(e => e.ContactId == id);
         }
     }
 }

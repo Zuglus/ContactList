@@ -23,7 +23,7 @@ namespace ContactList
             services.AddControllersWithViews();
 
             services.AddDbContext<ContactListContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ContactListContext")));
+                    options.UseSqlite(Configuration.GetConnectionString("ContactListContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
