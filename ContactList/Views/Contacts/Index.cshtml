@@ -10,7 +10,7 @@
     <a asp-action="Create">Создать новый</a>
 </p>
 <form asp-controller="Contacts" asp-action="Index"
-      method="get">
+      method="post">
     <p>
         <label>Поиск:</label>
         <input type="text" name="SearchString" value="@ViewData["SearchStr"]" />
@@ -18,11 +18,10 @@
     </p>
 </form>
 <form asp-controller="Contacts" asp-action="Index"
-      method="get">
+      method="post">
     <p>
         <label>По дате рождения</label>
-        <label> от </label>
-        <input type="date" name="SearchDateStart" value="@ViewData["SearchDateStart"]" />
+        <input asp-format="{" type="date" name="SearchDateStart" value="@ViewData["SearchDateStart"]" />
         <label> до </label>
         <input type="date" name="SearchDateEnd" value="@ViewData["SearchDateEnd"]" />
         <input type="submit" value="Фильтр" />

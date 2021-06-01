@@ -7,7 +7,8 @@ namespace ContactList.Models
     public class Contact
     {
         public int ContactId { get; set; }
-        [Display(Name = "Фамилия"), StringLength(50)]
+        [Display(Name = "Фамилия"), StringLength(50), MinLength(2)]
+        [RegularExpression(@"^[A-ZА-Я]+[A-Za-zА-Яа-я]*$")]
         public string Surname { get; set; }
 
         [Display(Name = "Имя"), StringLength(50), MinLength(2)]
@@ -17,6 +18,7 @@ namespace ContactList.Models
         public string Name { get; set; }
 
         [Display(Name = "Отчество"), StringLength(50)]
+        [RegularExpression(@"^[A-ZА-Я]+[A-Za-zА-Яа-я]*$")]
         public string Patronymic { get; set; }
 
         [DataType(DataType.Date), Display(Name = "День рождения")]

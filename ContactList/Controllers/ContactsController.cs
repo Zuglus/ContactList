@@ -17,13 +17,35 @@ namespace ContactList.Models
         }
 
         // GET: Contacts
-        public async Task<IActionResult> Index(DateTime SearchDateStart,
-            DateTime SearchDateEnd, string SearchString)
+        public async Task<IActionResult> Index()
         {
-            ViewData["SearchStr"] = SearchString;
 
             var res = _context
                 .Contact
+                    .Include("Phones")
+                    .Include("Emails")
+                    .Include("Skypes")
+                    .Include("Others");
+
+            return View(await res.AsNoTracking().ToListAsync());
+        }
+
+        // POST: Contacts
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(DateTime SearchDateStart,
+            DateTime SearchDateEnd, string SearchString)
+        {
+            SearchDateEnd = SearchDateEnd <= SearchDateStart
+                ? DateTime.Today : SearchDateEnd;
+
+            ViewData["SearchStr"] = SearchString;
+            ViewData["SearchDateStart"] = SearchDateStart.ToShortDateString();
+            ViewData["SearchDateEnd"] = SearchDateEnd.ToShortDateString();
+
+            var res = _context
+                .Contact.Where(d => d.Birthday >= SearchDateStart
+                && d.Birthday <= SearchDateEnd)
                     .Include("Phones")
                     .Include("Emails")
                     .Include("Skypes")

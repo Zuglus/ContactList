@@ -9,6 +9,7 @@ namespace ContactList.Models
 
         [DataType(DataType.PhoneNumber)]
         [StringLength(12)]
+        [RegularExpression(@"\d*$")]
         [Display(Name = "Телефон")]
         public string PhoneNumber { get; set; }
 
