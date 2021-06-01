@@ -10,50 +10,77 @@
     <h4>Контакт</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Surname)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Surname)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Patronymic)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Patronymic)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Birthday)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Birthday)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Organization)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Organization)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Position)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Position)
         </dd>
         @foreach (var phone in Model.Phones)
         {
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(modelPhone => phone.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(modelPhone => phone.PhoneNumber)
-        </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(modelPhone => phone.PhoneNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(modelPhone => phone.PhoneNumber)
+            </dd>
+        }
+        @foreach (var email in Model.Emails)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(modelEmail => email.EmailAdress)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(modelEmail => email.EmailAdress)
+            </dd>
+        }
+        @foreach (var skype in Model.Skypes)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(modelSkype => skype.SkypeNumber)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(modelSkype => skype.SkypeNumber)
+            </dd>
+        }
+        @foreach (var other in Model.Others)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(modelOther => other.OtherField)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(modelOther => other.OtherField)
+            </dd>
         }
     </dl>
 </div>

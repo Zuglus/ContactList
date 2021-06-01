@@ -1,6 +1,7 @@
 ﻿using ContactList.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,16 +17,32 @@ namespace ContactList.Models
         }
 
         // GET: Contacts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime SearchDateStart,
+            DateTime SearchDateEnd, string SearchString)
         {
-            var req = await _context
+            ViewData["SearchStr"] = SearchString;
+
+            var res = _context
                 .Contact
-                .Include("Phones")
-                .Include("Emails")
-                .Include("Skypes")
-                .Include("Others")
-                .ToListAsync();
-            return View(req);
+                    .Include("Phones")
+                    .Include("Emails")
+                    .Include("Skypes")
+                    .Include("Others");
+
+            if (!String.IsNullOrEmpty(SearchString))
+            {
+                res = res.Where(s => s.Surname.Contains(SearchString)
+                || s.Name.Contains(SearchString)
+                || s.Patronymic.Contains(SearchString)
+                || s.Organization.Contains(SearchString)
+                || s.Position.Contains(SearchString)
+                || s.Phones.Any(p => p.PhoneNumber.Contains(SearchString))
+                || s.Emails.Any(e => e.EmailAdress.Contains(SearchString))
+                || s.Skypes.Any(s => s.SkypeNumber.Contains(SearchString))
+                || s.Others.Any(o => o.OtherField.Contains(SearchString)));
+            }
+
+            return View(await res.AsNoTracking().ToListAsync());
         }
 
         // GET: Details
@@ -118,46 +135,70 @@ namespace ContactList.Models
                 .Include("Skypes")
                 .Include("Others")
                 .FirstOrDefaultAsync(i => i.ContactId == id);
-            if (contact == null)
-            {
-                return NotFound();
-            }
-            return View("Create", contact);
+
+            return contact == null ? NotFound() : View(contact);
         }
 
         // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ContactId," +
-            "Surname,Name,Patronymic,Birthday,Organization,Position," +
-            "Phones,Emails,Skypes,Others")] Contact contact)
+        public async Task<IActionResult> Edit(int id, string button,
+            [Bind("ContactId,Surname,Name,Patronymic,Birthday,Organization," +
+            "Position,Phones,Emails,Skypes,Others")] Contact contact)
         {
             if (id != contact.ContactId)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            switch (button)
             {
-                try
-                {
-                    _context.Update(contact);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ContactExists(contact.ContactId))
+                case "addPhoneField":
+                    contact.Phones.Add(new Phone());
+                    break;
+                case "delPhoneField":
+                    contact.Phones.Remove(contact.Phones.Last());
+                    break;
+                case "addEmailField":
+                    contact.Emails.Add(new Email());
+                    break;
+                case "delEmailField":
+                    contact.Emails.Remove(contact.Emails.Last());
+                    break;
+                case "addSkypeField":
+                    contact.Skypes.Add(new Skype());
+                    break;
+                case "delSkypeField":
+                    contact.Skypes.Remove(contact.Skypes.Last());
+                    break;
+                case "addOtherField":
+                    contact.Others.Add(new Other());
+                    break;
+                case "delOtherField":
+                    contact.Others.Remove(contact.Others.Last());
+                    break;
+                default:
+                    if (ModelState.IsValid)
                     {
-                        return NotFound();
+                        try
+                        {
+                            _context.Update(contact);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!ContactExists(contact.ContactId))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                        return RedirectToAction(nameof(Index));
                     }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                    break;
             }
-
             return View(contact);
         }
 
