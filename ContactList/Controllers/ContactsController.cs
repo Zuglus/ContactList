@@ -36,8 +36,8 @@ namespace ContactList.Models
         public async Task<IActionResult> Index(DateTime SearchDateStart,
             DateTime SearchDateEnd, string SearchString)
         {
-            SearchDateEnd = SearchDateEnd <= SearchDateStart
-                ? DateTime.Today : SearchDateEnd;
+            SearchDateEnd = SearchDateEnd > SearchDateStart
+                ? SearchDateEnd : DateTime.Today;
 
             ViewData["SearchStr"] = SearchString;
             ViewData["SearchDateStart"] = SearchDateStart.ToShortDateString();
