@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace ContactList.Models
 {
@@ -27,7 +28,7 @@ namespace ContactList.Models
                     .Include("Skypes")
                     .Include("Others");
 
-            return View(await res.AsNoTracking().ToListAsync());
+            return View(await res.ToListAsync());
         }
 
         // POST: Contacts
@@ -64,7 +65,7 @@ namespace ContactList.Models
                 || s.Others.Any(o => o.OtherField.Contains(SearchString)));
             }
 
-            return View(await res.AsNoTracking().ToListAsync());
+            return View(await res.ToListAsync());
         }
 
         // GET: Details
@@ -103,43 +104,73 @@ namespace ContactList.Models
             [Bind("ContactId,Surname,Name,Patronymic,Birthday," +
             "Organization,Position,Phones,Emails,Skypes,Others")] Contact contact)
         {
-            switch (button)
+            if (button.Contains("addPhoneField"))
             {
-                case "addPhoneField":
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Phones.Count())
                     contact.Phones.Add(new Phone());
-                    break;
-                case "delPhoneField":
-                    contact.Phones.Remove(contact.Phones.Last());
-                    break;
-                case "addEmailField":
+                else
+                {
+                    contact.Phones.Insert(index + 1, new Phone());
+                }
+            }
+            else if (button.Contains("delPhoneField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Phones.RemoveAt(index);
+            }
+            else if (button.Contains("addEmailField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Emails.Count())
                     contact.Emails.Add(new Email());
-                    break;
-                case "delEmailField":
-                    contact.Emails.Remove(contact.Emails.Last());
-                    break;
-                case "addSkypeField":
+                else
+                {
+                    contact.Emails.Insert(index + 1, new Email());
+                }
+            }
+            else if (button.Contains("delEmailField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Emails.RemoveAt(index);
+            }
+            else if (button.Contains("addSkypeField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Skypes.Count())
                     contact.Skypes.Add(new Skype());
-                    break;
-                case "delSkypeField":
-                    contact.Skypes.Remove(contact.Skypes.Last());
-                    break;
-                case "addOtherField":
+                else
+                {
+                    contact.Skypes.Insert(index + 1, new Skype());
+                }
+            }
+            else if (button.Contains("delSkypeField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Skypes.RemoveAt(index);
+            }
+            else if (button.Contains("addOtherField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Others.Count())
                     contact.Others.Add(new Other());
-                    break;
-                case "delOtherField":
-                    contact.Others.Remove(contact.Others.Last());
-                    break;
-                default:
-                    if (ModelState.IsValid)
-                    {
-                        _context.Add(contact);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
-                    }
-                    break;
+                else
+                {
+                    contact.Others.Insert(index + 1, new Other());
+                }
+            }
+            else if (button.Contains("delOtherField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Others.RemoveAt(index);
+            }
+            else if (button == "create" && ModelState.IsValid)
+            {
+                _context.Add(contact);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(contact);
-
         }
 
         // GET: Edit
@@ -156,6 +187,7 @@ namespace ContactList.Models
                 .Include("Emails")
                 .Include("Skypes")
                 .Include("Others")
+                .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.ContactId == id);
 
             return contact == null ? NotFound() : View(contact);
@@ -164,7 +196,7 @@ namespace ContactList.Models
         // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string button,
+        public async Task<object> Edit(int id, string button,
             [Bind("ContactId,Surname,Name,Patronymic,Birthday,Organization," +
             "Position,Phones,Emails,Skypes,Others")] Contact contact)
         {
@@ -172,55 +204,107 @@ namespace ContactList.Models
             {
                 return NotFound();
             }
-            switch (button)
+
+            if (button.Contains("addPhoneField"))
             {
-                case "addPhoneField":
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Phones.Count())
                     contact.Phones.Add(new Phone());
-                    break;
-                case "delPhoneField":
-                    contact.Phones.Remove(contact.Phones.Last());
-                    break;
-                case "addEmailField":
-                    contact.Emails.Add(new Email());
-                    break;
-                case "delEmailField":
-                    contact.Emails.Remove(contact.Emails.Last());
-                    break;
-                case "addSkypeField":
-                    contact.Skypes.Add(new Skype());
-                    break;
-                case "delSkypeField":
-                    contact.Skypes.Remove(contact.Skypes.Last());
-                    break;
-                case "addOtherField":
-                    contact.Others.Add(new Other());
-                    break;
-                case "delOtherField":
-                    contact.Others.Remove(contact.Others.Last());
-                    break;
-                default:
-                    if (ModelState.IsValid)
-                    {
-                        try
-                        {
-                            _context.Update(contact);
-                            await _context.SaveChangesAsync();
-                        }
-                        catch (DbUpdateConcurrencyException)
-                        {
-                            if (!ContactExists(contact.ContactId))
-                            {
-                                return NotFound();
-                            }
-                            else
-                            {
-                                throw;
-                            }
-                        }
-                        return RedirectToAction(nameof(Index));
-                    }
-                    break;
+                else
+                {
+                    contact.Phones.Insert(index + 1, new Phone());
+                }
             }
+            else if (button.Contains("delPhoneField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Phones.RemoveAt(index);
+            }
+            else if (button.Contains("addEmailField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Emails.Count())
+                    contact.Emails.Add(new Email());
+                else
+                {
+                    contact.Emails.Insert(index + 1, new Email());
+                }
+            }
+            else if (button.Contains("delEmailField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Emails.RemoveAt(index);
+            }
+            else if (button.Contains("addSkypeField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Skypes.Count())
+                    contact.Skypes.Add(new Skype());
+                else
+                {
+                    contact.Skypes.Insert(index + 1, new Skype());
+                }
+            }
+            else if (button.Contains("delSkypeField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Skypes.RemoveAt(index);
+            }
+            if (button.Contains("addOtherField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                if (index == contact.Others.Count())
+                    contact.Others.Add(new Other());
+                else
+                {
+                    contact.Others.Insert(index + 1, new Other());
+                }
+            }
+            else if (button.Contains("delOtherField"))
+            {
+                int index = int.Parse(button.Remove(0, 13));
+                contact.Others.RemoveAt(index);
+            }
+            else if (button == "save" && ModelState.IsValid)
+            {
+                try
+                {
+                    var oldContact = await _context
+                .Contact
+                .Include("Phones")
+                .Include("Emails")
+                .Include("Skypes")
+                .Include("Others")
+                .FirstOrDefaultAsync(i => i.ContactId == id);
+
+                    oldContact.ContactId = contact.ContactId;
+                    oldContact.Surname = contact.Surname;
+                    oldContact.Name = contact.Name;
+                    oldContact.Patronymic = contact.Patronymic;
+                    oldContact.Birthday = contact.Birthday;
+                    oldContact.Organization = contact.Organization;
+                    oldContact.Position = contact.Position;
+                    oldContact.Phones = contact.Phones;
+                    oldContact.Emails = contact.Emails;
+                    oldContact.Skypes = contact.Skypes;
+                    oldContact.Others = contact.Others;
+
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ContactExists(contact.ContactId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(contact);
         }
 
