@@ -1,10 +1,9 @@
-﻿using ContactList.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
+using ContactList.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContactList.Models
 {
@@ -106,13 +105,7 @@ namespace ContactList.Models
         {
             if (button.Contains("addPhoneField"))
             {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Phones.Count())
-                    contact.Phones.Add(new Phone());
-                else
-                {
-                    contact.Phones.Insert(index + 1, new Phone());
-                }
+                    contact.Phones.Add(new Phone());             
             }
             else if (button.Contains("delPhoneField"))
             {
@@ -120,14 +113,8 @@ namespace ContactList.Models
                 contact.Phones.RemoveAt(index);
             }
             else if (button.Contains("addEmailField"))
-            {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Emails.Count())
-                    contact.Emails.Add(new Email());
-                else
-                {
-                    contact.Emails.Insert(index + 1, new Email());
-                }
+            {                
+                    contact.Emails.Add(new Email());             
             }
             else if (button.Contains("delEmailField"))
             {
@@ -135,14 +122,8 @@ namespace ContactList.Models
                 contact.Emails.RemoveAt(index);
             }
             else if (button.Contains("addSkypeField"))
-            {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Skypes.Count())
-                    contact.Skypes.Add(new Skype());
-                else
-                {
-                    contact.Skypes.Insert(index + 1, new Skype());
-                }
+            {                
+                    contact.Skypes.Add(new Skype());             
             }
             else if (button.Contains("delSkypeField"))
             {
@@ -150,14 +131,8 @@ namespace ContactList.Models
                 contact.Skypes.RemoveAt(index);
             }
             else if (button.Contains("addOtherField"))
-            {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Others.Count())
-                    contact.Others.Add(new Other());
-                else
-                {
-                    contact.Others.Insert(index + 1, new Other());
-                }
+            {                
+                    contact.Others.Add(new Other());             
             }
             else if (button.Contains("delOtherField"))
             {
@@ -187,7 +162,6 @@ namespace ContactList.Models
                 .Include("Emails")
                 .Include("Skypes")
                 .Include("Others")
-                .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.ContactId == id);
 
             return contact == null ? NotFound() : View(contact);
@@ -205,30 +179,18 @@ namespace ContactList.Models
                 return NotFound();
             }
 
-            if (button.Contains("addPhoneField"))
+            if (button == "addPhoneField")
             {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Phones.Count())
-                    contact.Phones.Add(new Phone());
-                else
-                {
-                    contact.Phones.Insert(index + 1, new Phone());
-                }
+                contact.Phones.Add(new Phone());
             }
             else if (button.Contains("delPhoneField"))
             {
-                int index = int.Parse(button.Remove(0, 13));
+                int index = int.Parse(button.Remove(0, 13));                
                 contact.Phones.RemoveAt(index);
             }
             else if (button.Contains("addEmailField"))
             {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Emails.Count())
-                    contact.Emails.Add(new Email());
-                else
-                {
-                    contact.Emails.Insert(index + 1, new Email());
-                }
+                    contact.Emails.Add(new Email());                
             }
             else if (button.Contains("delEmailField"))
             {
@@ -237,28 +199,16 @@ namespace ContactList.Models
             }
             else if (button.Contains("addSkypeField"))
             {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Skypes.Count())
-                    contact.Skypes.Add(new Skype());
-                else
-                {
-                    contact.Skypes.Insert(index + 1, new Skype());
-                }
+                    contact.Skypes.Add(new Skype());                
             }
             else if (button.Contains("delSkypeField"))
             {
                 int index = int.Parse(button.Remove(0, 13));
                 contact.Skypes.RemoveAt(index);
             }
-            if (button.Contains("addOtherField"))
+            else if (button.Contains("addOtherField"))
             {
-                int index = int.Parse(button.Remove(0, 13));
-                if (index == contact.Others.Count())
-                    contact.Others.Add(new Other());
-                else
-                {
-                    contact.Others.Insert(index + 1, new Other());
-                }
+                    contact.Others.Add(new Other());                
             }
             else if (button.Contains("delOtherField"))
             {
@@ -269,25 +219,27 @@ namespace ContactList.Models
             {
                 try
                 {
-                    var oldContact = await _context
-                .Contact
-                .Include("Phones")
-                .Include("Emails")
-                .Include("Skypes")
-                .Include("Others")
-                .FirstOrDefaultAsync(i => i.ContactId == id);
+                    var contactToUpdate = _context
+                        .Contact
+                        .Include("Phones")
+                        .Include("Emails")
+                        .Include("Skypes")
+                        .Include("Others")
+                        .Where(w => w.ContactId == id)
+                        .Single();
 
-                    oldContact.ContactId = contact.ContactId;
-                    oldContact.Surname = contact.Surname;
-                    oldContact.Name = contact.Name;
-                    oldContact.Patronymic = contact.Patronymic;
-                    oldContact.Birthday = contact.Birthday;
-                    oldContact.Organization = contact.Organization;
-                    oldContact.Position = contact.Position;
-                    oldContact.Phones = contact.Phones;
-                    oldContact.Emails = contact.Emails;
-                    oldContact.Skypes = contact.Skypes;
-                    oldContact.Others = contact.Others;
+                    contactToUpdate.Surname = contact.Surname;
+                    contactToUpdate.Name = contact.Name;
+                    contactToUpdate.Patronymic = contact.Patronymic;
+                    contactToUpdate.Birthday = contact.Birthday;
+                    contactToUpdate.Organization = contact.Organization;
+                    contactToUpdate.Position = contact.Position;
+                    contactToUpdate.Phones = contact.Phones;
+                    contactToUpdate.Emails = contact.Emails;
+                    contactToUpdate.Skypes = contact.Skypes;
+                    contactToUpdate.Others = contact.Others;
+                    
+                   _context.Contact.Update(contactToUpdate);
 
                     await _context.SaveChangesAsync();
                 }
