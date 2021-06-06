@@ -4,6 +4,7 @@ namespace ContactList.Data
 {
     public class ContactListContext : DbContext
     {
+
         public ContactListContext (DbContextOptions<ContactListContext> options)
             : base(options)
         {

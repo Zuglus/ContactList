@@ -11,131 +11,162 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @Html.HiddenFor(model => model.ContactId)
+        @using (Html.BeginForm(FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            @Html.HiddenFor(i => i.ContactId)
+
             <div class="form-group">
-                <label asp-for="Surname" class="control-label"></label>
-                <input asp-for="Surname" class="form-control" />
-                <span asp-validation-for="Surname" class="text-danger"></span>
+                @Html.LabelFor(l => l.Surname)
+                @Html.TextBoxFor(t => t.Surname, new { @class = "form-control" })
+                @Html.ValidationMessageFor(v => v.Surname, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                @Html.LabelFor(l => l.Name)
+                @Html.TextBoxFor(t => t.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(v => v.Name, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
-                <label asp-for="Patronymic" class="control-label"></label>
-                <input asp-for="Patronymic" class="form-control" />
-                <span asp-validation-for="Patronymic" class="text-danger"></span>
+                @Html.LabelFor(l => l.Patronymic)
+                @Html.TextBoxFor(t => t.Patronymic, new { @class = "form-control" })
+                @Html.ValidationMessageFor(v => v.Patronymic, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
-                <label asp-for="Birthday" class="control-label"></label>
-                <input asp-for="Birthday" class="form-control" />
-                <span asp-validation-for="Birthday" class="text-danger"></span>
+                @Html.LabelFor(l => l.Birthday)
+                <input asp-for="Birthday" type="date" class="form-control" />
+                @Html.ValidationMessageFor(v => v.Birthday, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
-                <label asp-for="Organization" class="control-label"></label>
-                <input asp-for="Organization" class="form-control" />
-                <span asp-validation-for="Organization" class="text-danger"></span>
+                @Html.LabelFor(l => l.Organization)
+                @Html.TextBoxFor(t => t.Organization, new { @class = "form-control" })
+                @Html.ValidationMessageFor(v => v.Organization, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
-                <label asp-for="Position" class="control-label"></label>
-                <input asp-for="Position" class="form-control" />
-                <span asp-validation-for="Position" class="text-danger"></span>
+                @Html.LabelFor(l => l.Position)
+                @Html.TextBoxFor(t => t.Position, new { @class = "form-control" })
+                @Html.ValidationMessageFor(v => v.Position, null, new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Phones.Count == 1)
                 {
-
-                    <label asp-for="Phones[0].PhoneNumber" class="control-label"></label>
-                    <input asp-for="Phones[0].PhoneNumber" class="form-control" />
-                    <span asp-validation-for="Phones[0].PhoneNumber" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
+                    <div class="form-group">
+                        @Html.HiddenFor(h => h.Phones[0].PhoneId)
+                        @Html.LabelFor(l => l.Phones[0].PhoneNumber, null, new { @class = "control-label" })
+                        <input asp-for="Phones[0].PhoneNumber" value="@(Model.Phones[0].PhoneNumber)" class="form-control" />
+                        @Html.ValidationMessageFor(v => v.Phones[0].PhoneNumber, null, new { @class = "text-danger" })
+                    </div>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Phones.Count; i++)
                     {
-                        <label asp-for="Phones[i].PhoneNumber" class="control-label"></label>
-                        <input asp-for="Phones[i].PhoneNumber" class="form-control" />
-                        <span asp-validation-for="Phones[i].PhoneNumber" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delPhoneField">-</button>
+                        <div class="form-group">
+                            @Html.HiddenFor(h => h.Phones[i].PhoneId)
+                            @Html.LabelFor(l => l.Phones[i].PhoneNumber, null, new { @class = "control-label" })
+                            <input asp-for="@Model.Phones[i].PhoneNumber" value="@Model.Phones[i].PhoneNumber" class="form-control" />
+                            @Html.ValidationMessageFor(v => v.Phones[i].PhoneNumber, null, new { @class = "text-danger" })
+                            <button type="submit" name="button" class="btn btn-danger" value=@("delPhoneField" + i)>-</button>
+                        </div>
                     }
                 }
+                <button type="submit" name="button" class="btn btn-primary" value="addPhoneField">+</button>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Emails.Count == 1)
                 {
-                    <label asp-for="Emails[0].EmailAdress" class="control-label"></label>
-                    <input asp-for="Emails[0].EmailAdress" class="form-control" />
-                    <span asp-validation-for="Emails[0].EmailAdress" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addEmailField">+</button>
+                    <div class="form-group">
+                        @Html.HiddenFor(h => h.Emails[0].EmailId)
+                        @Html.LabelFor(l => l.Emails[0].EmailAdress, null, new { @class = "control-label" })
+                        <input asp-for="Emails[0].EmailAdress" value="@(Model.Emails[0].EmailAdress)" class="form-control" />
+                        @Html.ValidationMessageFor(v => v.Emails[0].EmailAdress, null, new { @class = "text-danger" })
+                    </div>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Emails.Count; i++)
                     {
-                        <label asp-for="Emails[i].EmailAdress" class="control-label"></label>
-                        <input asp-for="Emails[i].EmailAdress" class="form-control" />
-                        <span asp-validation-for="Emails[i].EmailAdress" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addEmailField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delEmailField">-</button>
+                        <div class="form-group">
+                            @Html.HiddenFor(h => h.Emails[i].EmailId)
+                            @Html.LabelFor(l => l.Emails[i].EmailAdress, null, new { @class = "control-label" })
+                            <input asp-for="@Model.Emails[i].EmailAdress" value="@Model.Emails[i].EmailAdress" class="form-control" />
+                            @Html.ValidationMessageFor(v => v.Emails[i].EmailAdress, null, new { @class = "text-danger" })
+                            <button type="submit" name="button" class="btn btn-danger" value=@("delEmailField" + i)>-</button>
+                        </div>
                     }
                 }
+                <button type="submit" name="button" class="btn btn-primary" value="addEmailField">+</button>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Skypes.Count == 1)
                 {
-
-                    <label asp-for="Skypes[0].SkypeNumber" class="control-label"></label>
-                    <input asp-for="Skypes[0].SkypeNumber" class="form-control" />
-                    <span asp-validation-for="Skypes[0].SkypeNumber" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addSkypeField">+</button>
+                    <div class="form-group">
+                        @Html.HiddenFor(h => h.Skypes[0].SkypeId)
+                        @Html.LabelFor(l => l.Skypes[0].SkypeNumber, null, new { @class = "control-label" })
+                        <input asp-for="Skypes[0].SkypeNumber" value="@(Model.Skypes[0].SkypeNumber)" class="form-control" />
+                        @Html.ValidationMessageFor(v => v.Skypes[0].SkypeNumber, null, new { @class = "text-danger" })
+                    </div>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Skypes.Count; i++)
                     {
-                        <label asp-for="Skypes[i].SkypeNumber" class="control-label"></label>
-                        <input asp-for="Skypes[i].SkypeNumber" class="form-control" />
-                        <span asp-validation-for="Skypes[i].SkypeNumber" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addSkypeField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delSkypeField">-</button>
+                        <div class="form-group">
+                            @Html.HiddenFor(h => h.Skypes[i].SkypeId)
+                            @Html.LabelFor(l => l.Skypes[i].SkypeNumber, null, new { @class = "control-label" })
+                            <input asp-for="@Model.Skypes[i].SkypeNumber" value="@Model.Skypes[i].SkypeNumber" class="form-control" />
+                            @Html.ValidationMessageFor(v => v.Skypes[i].SkypeNumber, null, new { @class = "text-danger" })
+                            <button type="submit" name="button" class="btn btn-danger" value=@("delSkypeField" + i)>-</button>
+                        </div>
                     }
                 }
+                <button type="submit" name="button" class="btn btn-primary" value="addSkypeField">+</button>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Others.Count == 1)
                 {
-
-                    <label asp-for="Others[0].OtherField" class="control-label"></label>
-                    <input asp-for="Others[0].OtherField" class="form-control" />
-                    <span asp-validation-for="Others[0].OtherField" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addOtherField">+</button>
+                    <div class="form-group">
+                        @Html.HiddenFor(h => h.Others[0].OtherId)
+                        @Html.LabelFor(l => l.Others[0].OtherField, null, new { @class = "control-label" })
+                        <input asp-for="Others[0].OtherField" value="@(Model.Others[0].OtherField)" class="form-control" />
+                        @Html.ValidationMessageFor(v => v.Others[0].OtherField, null, new { @class = "text-danger" })
+                    </div>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Others.Count; i++)
                     {
-                        <label asp-for="Others[i].OtherField" class="control-label"></label>
-                        <input asp-for="Others[i].OtherField" class="form-control" />
-                        <span asp-validation-for="Others[i].OtherField" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addOtherField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delOtherField">-</button>
+                        <div class="form-group">
+                            @Html.HiddenFor(h => h.Others[i].OtherId)
+                            @Html.LabelFor(l => l.Others[i].OtherField, null, new { @class = "control-label" })
+                            <input asp-for="@Model.Others[i].OtherField" value="@Model.Others[i].OtherField" class="form-control" />
+                            @Html.ValidationMessageFor(v => v.Others[i].OtherField, null, new { @class = "text-danger" })
+                            <button type="submit" name="button" class="btn btn-danger" value=@("delOtherField" + i)>-</button>
+                        </div>
                     }
                 }
+                <button type="submit" name="button" class="btn btn-primary" value="addOtherField">+</button>
             </div>
-            <div class="form-group">
-                <button type="submit" name="button" class="btn-primary" value="save">Сохранить</button>
-            </div>
-        </form>
+
+            <button type="submit" name="button" class="btn btn-success" value="save">Сохранить</button>
+        }
+
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Назад к списку</a>
+    @Html.ActionLink("Назад к списку", "Index")
+
 </div>
 
 @section Scripts {

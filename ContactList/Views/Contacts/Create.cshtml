@@ -43,99 +43,95 @@
                 <input asp-for="Position" class="form-control" />
                 <span asp-validation-for="Position" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Phones.Count == 1)
                 {
-
                     <label asp-for="Phones[0].PhoneNumber" class="control-label"></label>
-                    <input asp-for="Phones[0].PhoneNumber" class="form-control" />
+                    <input asp-for="Phones[0].PhoneNumber" value="@(Model == null ? null : (Model.Phones[0].PhoneNumber))" class="form-control" />
                     <span asp-validation-for="Phones[0].PhoneNumber" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Phones.Count; i++)
                     {
                         <label asp-for="Phones[i].PhoneNumber" class="control-label"></label>
-                        <input asp-for="Phones[i].PhoneNumber" class="form-control" />
+                        <input asp-for="Phones[i].PhoneNumber" value="@(Model.Phones[i].PhoneNumber)" class="form-control" />
                         <span asp-validation-for="Phones[i].PhoneNumber" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delPhoneField">-</button>
+                        <button type="submit" name="button" class="btn-danger" value="@("delPhoneField" + i)">-</button>
                     }
                 }
+                <button type="submit" name="button" class="btn-primary" value="addPhoneField">+</button>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Emails.Count == 1)
                 {
-
                     <label asp-for="Emails[0].EmailAdress" class="control-label"></label>
-                    <input asp-for="Emails[0].EmailAdress" class="form-control" />
+                    <input asp-for="Emails[0].EmailAdress" value="@(Model == null ? null : (Model.Emails[0].EmailAdress))" class="form-control" />
                     <span asp-validation-for="Emails[0].EmailAdress" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addEmailField">+</button>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Emails.Count; i++)
                     {
                         <label asp-for="Emails[i].EmailAdress" class="control-label"></label>
-                        <input asp-for="Emails[i].EmailAdress" class="form-control" />
+                        <input asp-for="Emails[i].EmailAdress" value="@(Model.Emails[i].EmailAdress)" class="form-control" />
                         <span asp-validation-for="Emails[i].EmailAdress" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addEmailField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delEmailField">-</button>
+                        <button type="submit" name="button" class="btn-danger" value="@("delEmailField" + i)">-</button>
                     }
                 }
+                <button type="submit" name="button" class="btn-primary" value="addEmailField">+</button>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Skypes.Count == 1)
                 {
-
                     <label asp-for="Skypes[0].SkypeNumber" class="control-label"></label>
-                    <input asp-for="Skypes[0].SkypeNumber" class="form-control" />
+                    <input asp-for="Skypes[0].SkypeNumber" value="@(Model == null ? null : (Model.Skypes[0].SkypeNumber))" class="form-control" />
                     <span asp-validation-for="Skypes[0].SkypeNumber" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addSkypeField">+</button>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Skypes.Count; i++)
                     {
                         <label asp-for="Skypes[i].SkypeNumber" class="control-label"></label>
-                        <input asp-for="Skypes[i].SkypeNumber" class="form-control" />
+                        <input asp-for="Skypes[i].SkypeNumber" value="@(Model.Skypes[i].SkypeNumber)" class="form-control" />
                         <span asp-validation-for="Skypes[i].SkypeNumber" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addSkypeField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delSkypeField">-</button>
+                        <button type="submit" name="button" class="btn-danger" value="@("delSkypeField" + i)">-</button>
                     }
                 }
+                <button type="submit" name="button" class="btn-primary" value="addSkypeField">+</button>
             </div>
+
             <div class="form-group">
                 @if (Model == null || Model.Others.Count == 1)
                 {
-
                     <label asp-for="Others[0].OtherField" class="control-label"></label>
-                    <input asp-for="Others[0].OtherField" class="form-control" />
+                    <input asp-for="Others[0].OtherField" value="@(Model == null ? null : (Model.Others[0].OtherField))" class="form-control" />
                     <span asp-validation-for="Others[0].OtherField" class="text-danger"></span>
-                    <button type="submit" name="button" class="btn-primary" value="addOtherField">+</button>
                 }
                 else
                 {
                     @for (int i = 0; i < Model.Others.Count; i++)
                     {
                         <label asp-for="Others[i].OtherField" class="control-label"></label>
-                        <input asp-for="Others[i].OtherField" class="form-control" />
+                        <input asp-for="Others[i].OtherField" value="@(Model.Others[i].OtherField)" class="form-control" />
                         <span asp-validation-for="Others[i].OtherField" class="text-danger"></span>
-                        <button type="submit" name="button" class="btn-primary" value="addOtherField">+</button>
-                        <button type="submit" name="button" class="btn-secondary" value="delOtherField">-</button>
+                        <button type="submit" name="button" class="btn-danger" value="@("delOtherField" + i)">-</button>
                     }
                 }
+                <button type="submit" name="button" class="btn-primary" value="addOtherField">+</button>
             </div>
             <div class="form-group">
-                <button type="submit" name="button" class="btn-primary" value="create">Добавить</button>
+                <button type="submit" name="button" class="btn-primary" value="create">Создать</button>
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Назад к списку</a>
+    @Html.ActionLink("Назад к списку", "Index")
 </div>
 
 @section Scripts {
